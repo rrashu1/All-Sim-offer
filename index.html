@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আপনার সিম নির্বাচন করুন এবং অফার নিন</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c2c2c; /* কিছুটা কালো ব্যাকগ্রাউন্ড */
+            color: #f0f0f0; /* সাদা টেক্সট */
+            display: flex;
+            flex-direction: column; /* ব্যানার উপরে রাখার জন্য কন্টেইনারের সাথে ফ্লেক্স ডিরেকশন পরিবর্তন */
+            align-items: center; /* কন্টেন্ট সেন্টারে রাখার জন্য */
+            min-height: 100vh;
+            margin: 0;
+            padding: 0; /* বডির প্যাডিং ০ করা হলো, ব্যানার পুরো প্রস্থ নিতে পারবে */
+            box-sizing: border-box;
+        }
+
+        .banner-ad-container {
+            width: 100%;
+            text-align: center;
+            background-color: #333; /* ব্যানারের জন্য একটি হালকা ব্যাকগ্রাউন্ড, যদি বিজ্ঞাপন লোড না হয় */
+            padding: 5px 0; /* ব্যানারের উপরে ও নিচে সামান্য প্যাডিং */
+            margin-bottom: 15px; /* ব্যানারের নিচে ফাঁক */
+            min-height: 90px; /* ব্যানারের উচ্চতা অনুযায়ী */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #3f3f3f; /* কন্টেইনারের জন্য হালকা কালো */
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 400px; /* মোবাইল ডিভাইসের জন্য উপযুক্ত */
+            margin-top: 0; /* যেহেতু ব্যানার উপরে, তাই কন্টেইনারের উপরের মার্জিন ০ */
+            box-sizing: border-box; /* প্যাডিং ও বর্ডার যেন width এর মধ্যে থাকে */
+        }
+
+        h1 {
+            font-size: 1.8em; /* ফন্ট সাইজ সামান্য কমানো হলো */
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .input-section { /* নতুন নাম ইনপুট এবং ফোন ইনপুটের জন্য সাধারণ ক্লাস */
+            margin-bottom: 20px;
+        }
+
+        .input-section input[type="text"],
+        .input-section input[type="tel"] {
+            width: calc(80% - 24px);
+            max-width: calc(300px - 24px);
+            padding: 12px;
+            margin-bottom: 10px; /* উপরের ইনপুটের নিচের মার্জিন কমানো হলো */
+            border: 1px solid #555;
+            background-color: #e0e0e0;
+            color: #333;
+            border-radius: 25px;
+            font-size: 1em;
+            text-align: center;
+            box-sizing: border-box;
+        }
+         .input-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #cccccc;
+        }
+
+
+        .sim-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* বাটনগুলোর মধ্যে ফাঁক */
+            margin-bottom: 25px;
+        }
+
+        .sim-button {
+            background-color: #f9f9f9; /* সাদা বাটন */
+            color: #333; /* কালো টেক্সট */
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1.1em;
+        }
+
+        .sim-button:hover {
+            background-color: #e9e9e9;
+        }
+        .sim-button.selected {
+            background-color: #cceeff; /* সিলেক্টেড বাটনের রঙ */
+            border-color: #007bff;
+            transform: scale(1.02);
+        }
+
+        .traffic-light {
+            font-size: 1.8em; /* ট্রাফিক লাইট আইকনের আকার */
+            margin-right: 15px;
+            line-height: 1;
+        }
+
+        .sim-logo {
+            font-weight: bold;
+            flex-grow: 1; /* টেক্সটকে জায়গা নিতে সাহায্য করে */
+            text-align: left;
+        }
+
+        /* সিম লোগোর জন্য নির্দিষ্ট রঙ ( ছবির মত করে ) */
+        .airtel { color: #e50914; } /* Airtel Red */
+        .robi { color: #f37021; } /* Robi Orange/Red */
+        .grameenphone { color: #00a9e0; } /* Grameenphone Blue */
+        .banglalink { color: #f37021; } /* Banglalink Orange (টাইগার প্রিন্টের মত) */
+
+        .share-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .share-section h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #66ccff; /* অফারের রঙ */
+        }
+
+        .share-section p {
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            color: #cccccc;
+        }
+
+        .action-button {
+            background-color: #007bff; /* নীল বাটন */
+            color: white;
+            border: none;
+            border-radius: 25px; /* গোলাকার বাটন */
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 80%;
+            max-width: 300px;
+            margin-top: 10px;
+        }
+
+        .action-button:hover {
+            background-color: #0056b3;
+        }
+
+        .message-area {
+            margin-top: 20px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .message-area.success {
+            color: #28a745; /* সবুজ রঙ সফলতার জন্য */
+        }
+
+        .message-area.error {
+            color: #dc3545; /* লাল রঙ ত্রুটির জন্য */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ব্যানার বিজ্ঞাপন শুরু -->
+    <div class="banner-ad-container">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'adbcfe51eacd139e7821b7f768acc91d',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728, // এই প্রস্থ মোবাইল ডিভাইসের জন্য বেশি হতে পারে, বিজ্ঞাপন নেটওয়ার্ক এটি পরিচালনা করতে পারে
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//grumpyhopesucceeding.com/adbcfe51eacd139e7821b7f768acc91d/invoke.js"></script>
+    </div>
+    <!-- ব্যানার বিজ্ঞাপন শেষ -->
+
+    <div class="container">
+        <h1>আপনার সিম নির্বাচন করুন</h1>
+
+        <div id="nameInputSection" class="input-section">
+            <label for="sharerName">আপনার নাম (ঐচ্ছিক):</label>
+            <input type="text" id="sharerName" placeholder="এখানে আপনার নাম লিখুন">
+        </div>
+
+        <div class="sim-options">
+            <button class="sim-button" data-sim="Airtel">
+                <span class="traffic-light">🚦</span>
+                <span class="sim-logo airtel">airtel</span>
+            </button>
+            <button class="sim-button" data-sim="Robi">
+                <span class="traffic-light">🚦</span>
+                <span class="sim-logo robi">robi</span>
+            </button>
+            <button class="sim-button" data-sim="Grameenphone">
+                <span class="traffic-light">🚦</span>
+                <span class="sim-logo grameenphone">grameenphone</span>
+            </button>
+            <button class="sim-button" data-sim="Banglalink">
+                <span class="traffic-light">🚦</span>
+                <span class="sim-logo banglalink">banglalink</span>
+            </button>
+        </div>
+
+        <div class="share-section">
+            <h2>বন্ধুদের সাথে শেয়ার করুন</h2>
+            <h3>পান ৫ জিবি ইন্টারনেট</h3>
+            <p>৫ জিবি ইন্টারনেট পেতে ১০ জন বন্ধুর সাথে WhatsApp বা Facebook-এ শেয়ার করুন।</p>
+            <button id="shareButton" class="action-button">শেয়ার করুন</button>
+        </div>
+
+        <div id="phoneInputSection" class="input-section" style="display: none; margin-top: 20px;">
+            <input type="tel" id="phoneNumber" placeholder="আপনার ফোন নম্বর দিন (১১ সংখ্যা)">
+            <button id="confirmButton" class="action-button">নিশ্চিত করুন</button>
+        </div>
+
+        <p id="messageArea" class="message-area"></p>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const simButtons = document.querySelectorAll('.sim-button');
+            const sharerNameInput = document.getElementById('sharerName');
+            const shareButton = document.getElementById('shareButton');
+            const phoneInputSection = document.getElementById('phoneInputSection');
+            const phoneNumberInput = document.getElementById('phoneNumber');
+            const confirmButton = document.getElementById('confirmButton');
+            const messageArea = document.getElementById('messageArea');
+
+            let selectedSim = null;
+            let hasShared = false;
+
+            simButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    simButtons.forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                    selectedSim = button.dataset.sim;
+                    messageArea.textContent = '';
+                    messageArea.className = 'message-area';
+                    if (!hasShared) {
+                        phoneInputSection.style.display = 'none';
+                    }
+                    console.log('Selected SIM:', selectedSim);
+                });
+            });
+
+            shareButton.addEventListener('click', async () => {
+                if (!selectedSim) {
+                    messageArea.textContent = 'অনুগ্রহ করে প্রথমে আপনার সিম নির্বাচন করুন!';
+                    messageArea.className = 'message-area error';
+                    return;
+                }
+
+                const sharerName = sharerNameInput.value.trim();
+                let shareText;
+
+                if (sharerName) {
+                    shareText = `"${sharerName}" আপনাকে এই অফারটি নিতে আমন্ত্রণ জানাচ্ছেন! আমি আমার ${selectedSim} সিমের জন্য একটি দারুণ অফার পেয়েছি। আপনিও লিঙ্কে ক্লিক করে ৫ জিবি ফ্রি ইন্টারনেট পেতে পারেন!`;
+                } else {
+                    shareText = `দারুণ খবর! আমি আমার ${selectedSim} সিমের জন্য একটি বিশেষ অফার পেয়েছি। আপনিও লিঙ্কে ক্লিক করে ৫ জিবি ফ্রি ইন্টারনেট পেতে পারেন!`;
+                }
+
+                const shareData = {
+                    title: 'একটি দারুণ অফার! ৫ জিবি ফ্রি ইন্টারনেট!',
+                    text: shareText,
+                    url: window.location.href
+                };
+
+                if (navigator.share) {
+                    try {
+                        await navigator.share(shareData);
+                        console.log('Share action completed or dialog dismissed by user.');
+                        messageArea.textContent = 'শেয়ার করার পর, আপনার নম্বর দিন এবং ৫ জিবি ফ্রি ইন্টারনেট বুঝে নিন।';
+                        messageArea.className = 'message-area success';
+                        hasShared = true;
+                        phoneInputSection.style.display = 'block';
+                        phoneNumberInput.focus();
+                    } catch (error) {
+                        console.error('Error sharing:', error);
+                        hasShared = false;
+                        phoneInputSection.style.display = 'none';
+
+                        if (error.name === 'AbortError') {
+                            messageArea.textContent = 'শেয়ার বাতিল করা হয়েছে। অফার পেতে অনুগ্রহ করে শেয়ার করুন।';
+                            messageArea.className = 'message-area error';
+                        } else {
+                            messageArea.textContent = 'শেয়ার করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।';
+                            messageArea.className = 'message-area error';
+                        }
+                    }
+                } else {
+                    messageArea.textContent = 'আপনার ব্রাউজারে Web Share API সমর্থিত নয়। অনুগ্রহ করে এই লিঙ্কটি কপি করে বন্ধুদের সাথে ম্যানুয়ালি শেয়ার করুন। এরপর আপনার নম্বর দিন।';
+                    messageArea.className = 'message-area error'; // এটিকে error না দিয়ে তথ্য হিসেবে দেখানো যেতে পারে
+                    // Web share API সমর্থিত না হলেও, ব্যবহারকারীকে নম্বর দেওয়ার সুযোগ দেওয়া হচ্ছে
+                    hasShared = true; // ধরে নিচ্ছি ব্যবহারকারী ম্যানুয়ালি শেয়ার করবেন
+                    phoneInputSection.style.display = 'block';
+                    phoneNumberInput.focus();
+                    console.log("Web Share API not supported. Allowing manual share and number input.");
+                }
+            });
+
+            confirmButton.addEventListener('click', () => {
+                const phoneNumber = phoneNumberInput.value.trim();
+
+                if (!selectedSim) {
+                    messageArea.textContent = 'ত্রুটি: সিম নির্বাচন করা হয়নি। অনুগ্রহ করে প্রথমে একটি সিম নির্বাচন করুন।';
+                    messageArea.className = 'message-area error';
+                    return;
+                }
+
+                if (!hasShared) {
+                    messageArea.textContent = 'অফারটি সক্রিয় করতে অনুগ্রহ করে প্রথমে শেয়ার করুন।';
+                    messageArea.className = 'message-area error';
+                    phoneInputSection.style.display = 'none';
+                    return;
+                }
+
+                if (!phoneNumber) {
+                    messageArea.textContent = 'অনুগ্রহ করে আপনার ফোন নম্বর লিখুন।';
+                    messageArea.className = 'message-area error';
+                    phoneNumberInput.focus();
+                    return;
+                }
+
+                if (!/^(01)\d{9}$/.test(phoneNumber)) {
+                    messageArea.textContent = 'অনুগ্রহ করে একটি ১১ সংখ্যার সঠিক ফোন নম্বর লিখুন (যেমনঃ ০১xxxxxxxxx)।';
+                    messageArea.className = 'message-area error';
+                    phoneNumberInput.focus();
+                    return;
+                }
+
+                messageArea.textContent = `ধন্যবাদ! আপনার ${selectedSim} নম্বরে (${phoneNumber}) ৭ দিনের মধ্যে ৫ জিবি ইন্টারনেট পাঠানো হবে।`;
+                messageArea.className = 'message-area success';
+
+                phoneNumberInput.disabled = true;
+                confirmButton.disabled = true;
+                confirmButton.style.backgroundColor = '#aaa';
+                sharerNameInput.disabled = true; // নাম ইনপুটও নিষ্ক্রিয় করা হলো
+
+                console.log(`Offer claimed for SIM: ${selectedSim}, Sharer: ${sharerNameInput.value.trim()}, Phone: ${phoneNumber} (This is a demo, no data is sent)`);
+            });
+        });
+    </script>
+
+    <!-- সোশ্যাল বার বিজ্ঞাপন শুরু -->
+    <script type='text/javascript' src='//grumpyhopesucceeding.com/06/02/5f/06025f0d45975648f726adcf793432dc.js'></script>
+    <!-- সোশ্যাল বার বিজ্ঞাপন শেষ -->
+
+</body>
+</html>
